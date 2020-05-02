@@ -11,7 +11,7 @@ contract Ownable {
     //  1) create a private '_owner' variable of type address with a public getter function
     address private _owner;
     /// Look up the address of the owner
-    function owner() public view returns (address) {
+    function getOwner() public view returns (address) {
         return _owner;
     }
     //  2) create an internal constructor that sets the _owner var to the creater of the contract
@@ -40,7 +40,7 @@ contract Ownable {
         _transferOwnership(newOwner);
     }
 
-    function transferOwnership(address newOwner) public onlyOwner {
+    function _transferOwnership(address newOwner) public onlyOwner {
         // TODO add functionality to transfer control of the contract to a newOwner.
         // make sure the new owner is a real address
         require(newOwner != address(0));
@@ -54,8 +54,8 @@ contract Pausable is Ownable{
     //  1) create a private '_paused' variable of type bool
     bool private _paused;
     //  2) create a public setter using the inherited onlyOwner modifier
-    function setPaused(bool mode) onlyOwner {
-        require(paused!=mode);
+    function setPaused(bool mode) public onlyOwner {
+        require(_paused!=mode);
         _paused = mode;
         if(mode) emit Unpaused(msg.sender);
         else emit Paused(msg.sender);
@@ -249,7 +249,7 @@ contract ERC721 is Pausable, ERC165 {
     function _mint(address to, uint256 tokenId) internal {
 
         // TODO revert if given tokenId already exists or given address is invalid
-        revert(_exists(tokenId) || to==address(0));
+        if(_exists(tokenId) || to==address(0)) revert();
         // TODO mint tokenId to given address & increase token count of owner
         _ownedTokensCount[to].increment();
         _tokenOwner[tokenId] = to;
@@ -527,7 +527,7 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
     // TIP #2: you can also use uint2str() to convert a uint to a string
         // see https://github.com/oraclize/ethereum-api/blob/master/oraclizeAPI_0.5.sol for strConcat()
     // require the token exists before setting
-    function setTokenURI(uint256 tokenId){
+    function setTokenURI(uint256 tokenId) internal{
         require(_exists(tokenId));
         _tokenURIs[tokenId] = strConcat(_baseTokenURI, uint2str(tokenId));
     }
@@ -555,7 +555,7 @@ contract CustomERC721Token is ERC721Metadata{
     //      -takes in a 'to' address, tokenId, and tokenURI as parameters
     //      -returns a true boolean upon completion of the function
     //      -calls the superclass mint and setTokenURI functions
-    function mint(address to, uint256 tokenId) public onlyOwner{
+    function mint(address to, uint256 tokenId) public onlyOwner returns(bool){
         super._mint(to, tokenId);
         super.setTokenURI(tokenId);
         return true;
