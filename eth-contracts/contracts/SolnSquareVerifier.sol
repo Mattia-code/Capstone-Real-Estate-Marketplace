@@ -4,14 +4,12 @@ import "./ERC721Mintable.sol";
 import "./Verifier.sol";
 
 // TODO define a contract call to the zokrates generated solidity contract <Verifier> or <renamedVerifier>
-contract SquareVerifier is Verifier{
-
-}
+contract SquareVerifier is Verifier{ }
 
 // TODO define another contract named SolnSquareVerifier that inherits from your ERC721Mintable class
 contract SolnSquareVerifier is CustomERC721Token{
 
-    SquareVerifier public _squareVerifier;
+    SquareVerifier private _squareVerifier;
 
     constructor( address verifierAddress) public {
         _squareVerifier = SquareVerifier(verifierAddress);
@@ -20,7 +18,7 @@ contract SolnSquareVerifier is CustomERC721Token{
     // TODO define a solutions struct that can hold an tokenId & an address
     struct Solution{
         uint256 tokenId;
-        address owner;
+        address to;
     }
 
     // TODO define an array of the above struct
@@ -31,17 +29,17 @@ contract SolnSquareVerifier is CustomERC721Token{
 
 
     // TODO Create an event to emit when a solution is added
-    event SolutionAdded(uint256 tokenId, address owner, bytes32 key);
+    event SolutionAdded(uint256 tokenId, address to, bytes32 key);
 
 
     // TODO Create a function to add the solutions to the array and emit the event
-    function addSolution( uint256 _index, address _owner, bytes32 _key) public {
-        Solution memory solution = Solution(_index, _owner);
+    function addSolution( uint256 _index, address _to, bytes32 _key) public {
+        Solution memory solution = Solution(_index, _to);
 
         solutionsArray.push(solution);
         solutions[_key] = solution;
 
-        emit SolutionAdded(_index, _owner, _key );
+        emit SolutionAdded(_index, _to, _key );
     }
 
 
@@ -57,6 +55,7 @@ contract SolnSquareVerifier is CustomERC721Token{
     function mintToken(address to, uint256 tokenId,
         uint[2] memory a, uint[2][2] memory b,
         uint[2] memory c, uint[2] memory inputs)
+    whenNotPaused
     public
     {
         bytes32 key = generateKey(a, b, c, inputs);
@@ -67,8 +66,8 @@ contract SolnSquareVerifier is CustomERC721Token{
     }
 
     function _existSolution(bytes32 _key) internal returns(bool){
-        address owner = solutions[_key].owner;
-        return owner != address(0);
+        address to = solutions[_key].to;
+        return to != address(0);
     }
 }
 

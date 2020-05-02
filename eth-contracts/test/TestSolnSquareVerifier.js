@@ -17,6 +17,7 @@ contract('SolnSquareVerifier', accounts => {
         const { proof: { a, b, c }, inputs: input } = proof;
 
         let key = await this.contract.generateKey.call(a, b, c, input);
+        console.log("key", key);
         let result = await this.contract.addSolution(1, account_two, key);
 
         assert.equal(result.logs[0].event, 'SolutionAdded', "Error: no event emitted.");
@@ -26,11 +27,13 @@ contract('SolnSquareVerifier', accounts => {
     it('Test if an ERC721 token can be minted for contract - SolnSquareVerifier', async function () {
         const { proof: { a, b, c }, inputs: input } = proof;
 
-        let totalSupply = (await this.contract.totalSupply.call()).toNumber();
-        await this.contract.mintToken(account_two, 5, a, b, c, input, {from: account_one});
+        let supplyBefore = (await this.contract.totalSupply.call()).toNumber();
 
-        let newTotalSupply = (await this.contract.totalSupply.call()).toNumber();
+        await this.contract.mintToken(account_two, 2, a, b, c, input, {from: account_one});
 
-        assert.equal(totalSupply+1, newTotalSupply, "Error 2: an ERC721 token cannot be minted for contract - SolnSquareVerifier");
+        let supplyAfter = (await this.contract.totalSupply.call()).toNumber();
+        let difference = supplyAfter - supplyBefore;
+
+        assert.equal(difference, 1, "Error: an ERC721 token cannot be minted for contract - SolnSquareVerifier");
     })
 })
