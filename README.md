@@ -47,6 +47,8 @@ Following the example of the Starter Code provided by Udacity at the following [
 * web3 version: v1.2.1
 * [OpenSea MarketPlace Storefront](https://rinkeby.opensea.io/assets/startoken-v2)
 
+![test img](starToken.png)
+
 ## Versioning
 
 Actual version: 1.0.0
