@@ -39,15 +39,13 @@ Following the example of the Starter Code provided by Udacity at the following [
 
 ### Info for submit
 
-* TX: VOID
-* Contract Address (SquareVerifier): VOID
-* Contract Address (SolnSquareVerifier): VOID 
-* Contract Abi's: VOID
+* Contract Address (SquareVerifier): 0x752D8E5bb7dB542DB82a5eA3A1FE5B82D92B334f
+* Contract Address (SolnSquareVerifier): 0x69622e97a30C9Ba4bDAD8e7A8A024201fCF45F03 
 * Program version: 1.0.0
 * Node version: v12.16.1
 * Truffle version: v5.1.19
 * web3 version: v1.2.1
-* [OpenSea MarketPlace Storefront]()
+* [OpenSea MarketPlace Storefront](https://rinkeby.opensea.io/assets/startoken-v2)
 
 ## Versioning
 
